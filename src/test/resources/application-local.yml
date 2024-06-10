@@ -1,5 +1,6 @@
 read:
   mode: "proto"
+  beginTimestamp: ""
   proto:
     pathToDescriptor: "src/test/resources/person.desc"
   subject: "*"

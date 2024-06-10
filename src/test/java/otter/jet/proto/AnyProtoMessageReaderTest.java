@@ -28,7 +28,8 @@ import otter.jet.store.MessageStore;
     properties = {
       "read.mode=proto",
       "read.subject=any_person",
-      "read.proto.pathToDescriptor=src/test/resources/person.desc"
+      "read.proto.pathToDescriptor=src/test/resources/person.desc",
+      "read.beginTimestamp="
     })
 class AnyProtoMessageReaderTest extends AbstractIntegrationTest {
 

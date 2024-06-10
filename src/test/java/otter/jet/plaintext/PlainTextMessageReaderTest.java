@@ -21,7 +21,7 @@ import org.springframework.test.context.TestPropertySource;
 import otter.jet.store.Filters;
 import otter.jet.store.MessageStore;
 
-@TestPropertySource(properties = {"read.mode=plaintext", "read.subject=plaintext"})
+@TestPropertySource(properties = {"read.mode=plaintext", "read.subject=plaintext", "read.beginTimestamp="})
 class PlainTextMessageReaderTest extends AbstractIntegrationTest {
 
   private static final LocalDateTime ignoredMessageTimestamp =
