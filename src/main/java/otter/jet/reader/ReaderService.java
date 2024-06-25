@@ -9,6 +9,7 @@ import io.nats.client.Subscription;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.time.LocalDateTime;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -27,17 +28,20 @@ public class ReaderService {
     private final MessageDeserializer messageDeserializer;
     private final String subject;
     private final MessageStore messageStore;
+    private final LocalDateTime beginTimestamp;
 
     private final Executor executorService = Executors.newSingleThreadExecutor();
 
     public ReaderService(String natsServerUrl,
                          MessageDeserializer messageDeserializer,
                          String subject,
-                         MessageStore messageStore) {
+                         MessageStore messageStore,
+                         LocalDateTime beginTimestamp) {
         this.natsServerUrl = natsServerUrl;
         this.messageDeserializer = messageDeserializer;
         this.subject = subject;
         this.messageStore = messageStore;
+        this.beginTimestamp = beginTimestamp;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -93,21 +97,35 @@ public class ReaderService {
             Message message = subscription.nextMessage(100);
             // Print the message
             if (message != null) {
-                try {
-                    DeserializedMessage deserializedMessage =
-                            messageDeserializer.deserializeMessage(ByteBuffer.wrap(message.getData()));
-                    ReadMessage msg =
-                            new ReadMessage(
-                                    message.getSubject(),
-                                    deserializedMessage.name(),
-                                    deserializedMessage.content(),
-                                    message.metaData().timestamp().toLocalDateTime());
-                    messageStore.add(msg);
+                LocalDateTime messageTimestamp = message
+                        .metaData()
+                        .timestamp()
+                        .toLocalDateTime();
+
+                if (messageTimestamp.isAfter(beginTimestamp)) {
+                    deserializeMessage(messageDeserializer, message, messageTimestamp);
+                } else {
+                    LOG.warn("Timestamp from message {}, smaller then begin timestamp {}, message {} will not be process", messageTimestamp, beginTimestamp, message.getSID());
                     message.ack();
-                } catch (Exception e) {
-                    LOG.warn("Unable to deserialize message", e);
                 }
             }
+        }
+    }
+
+    private void deserializeMessage(MessageDeserializer messageDeserializer, Message message, LocalDateTime timestamp) {
+        try {
+            DeserializedMessage deserializedMessage =
+                    messageDeserializer.deserializeMessage(ByteBuffer.wrap(message.getData()));
+            ReadMessage msg =
+                    new ReadMessage(
+                            message.getSubject(),
+                            deserializedMessage.name(),
+                            deserializedMessage.content(),
+                            timestamp);
+            messageStore.add(msg);
+            message.ack();
+        } catch (Exception e) {
+            LOG.warn("Unable to deserialize message", e);
         }
     }
 }

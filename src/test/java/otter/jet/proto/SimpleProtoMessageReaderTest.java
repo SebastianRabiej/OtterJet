@@ -28,7 +28,8 @@ import static org.awaitility.Awaitility.await;
       "read.mode=proto",
       "read.subject=typed_person",
       "read.proto.messageTypeName=protobuf.Person",
-      "read.proto.pathToDescriptor=src/test/resources/person.desc"
+      "read.proto.pathToDescriptor=src/test/resources/person.desc",
+      "read.beginTimestamp="
     })
 class SimpleProtoMessageReaderTest extends AbstractIntegrationTest {
 

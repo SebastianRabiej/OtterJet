@@ -1,5 +1,6 @@
 read:
   mode: "proto"
+  beginTimestamp: "2024-06-10 10:21:20" # String in format yyyy-MM-dd HH:mm:ss empty for all messages
   proto:
       pathToDescriptor: "path_to_descriptor"
   subject: "*"
