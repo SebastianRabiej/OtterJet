@@ -40,7 +40,8 @@
         <#if isMonitoringEnabled>
             <li><a href="<@spring.url '/monitoring'/>">Monitoring</a></li>
         <#else>
-            <li>Monitoring is not configured. You can configure it to enable the view. ADD LINK TO README HOW TO DO IT
+            <li >Monitoring is not configured. Tutorial on how to enable it is available
+                <a style="all: initial; color: white; font-family: 'Roboto', sans-serif; line-height: 1.6; text-decoration: underline" href="https://docs.nats.io/running-a-nats-service/nats_admin/monitoring" target="_blank"> here</a>
             </li>
         </#if>
     </ul>
