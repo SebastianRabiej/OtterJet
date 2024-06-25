@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import otter.jet.examples.protobuf.PersonProtos;
 
 public class RandomProtoPersonGenerator {
+
   @NotNull
   public static PersonProtos.Person randomPerson() {
     Faker faker = new Faker();

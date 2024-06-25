@@ -147,13 +147,13 @@
         }
     </style>
     <script>
-        function htmlDecode(input) {
-            var doc = new DOMParser().parseFromString(input, "text/html");
+        const htmlDecode = (input) => {
+            const doc = new DOMParser().parseFromString(input, "text/html");
             return doc.documentElement.textContent;
         }
 
-        function toggleCollapse(contentId, button) {
-            var element = document.getElementById(contentId);
+        const toggleCollapse = (contentId, button) => {
+            const element = document.getElementById(contentId);
             element.classList.toggle("collapsed");
 
             // Update button text based on the state
@@ -164,9 +164,9 @@
             }
         }
 
-        function formatTimestamp(timestamp) {
-            var date = new Date(timestamp);
-            var options = {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'};
+        const formatTimestamp = (timestamp) => {
+            const date = new Date(timestamp);
+            const options = {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'};
             return date.toLocaleDateString(undefined, options);
         }
     </script>
@@ -223,19 +223,19 @@
 
     <script>
         try {
-            var decodedMessage = htmlDecode('${message.body()?json_string}');
-            var messageData = JSON.parse(decodedMessage);
-            var formattedJson = JSON.stringify(messageData, null, 4);
-            document.getElementById('collapsible-${message_index}').textContent = formattedJson;
+            const decodedMessage = htmlDecode('${message.body()?json_string}');
+            const messageData = JSON.parse(decodedMessage);
+            document.getElementById('collapsible-${message_index}').textContent = JSON.stringify(messageData, null, 4);
         } catch (error) {
             document.getElementById('collapsible-${message_index}').textContent = '${message.body()}';
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
-            var timestamps = document.querySelectorAll('.message__timestamp');
-            timestamps.forEach(function (elem) {
-                var timestamp = elem.getAttribute('data-timestamp');
-                elem.textContent = formatTimestamp(timestamp);
+            document
+                .querySelectorAll('.message__timestamp')
+                .forEach((elem) => {
+                    const timestamp = elem.getAttribute('data-timestamp');
+                    elem.textContent = formatTimestamp(timestamp);
             });
         });
     </script>

@@ -3,6 +3,8 @@ read:
   proto:
       pathToDescriptor: "path_to_descriptor"
   subject: "*"
+  store:
+    limit: 1000
 
 server:
   port: 1111
